@@ -16,10 +16,11 @@ if(searchId.has("id")) {
   }
 
 async function getProductById() {
+    console.log(id)
     await fetch(`http://localhost:3000/api/products/${id}`)
         .then((res) => res.json())
         .then((data) => (productById = data))
-        .catch(err => console.log('erreur lors du chargement des produits', err));
+        .catch(err => console.log('erreur lors du chargement des produits', err)); 
 }
 
 //afficher l'image
@@ -64,7 +65,7 @@ function addToCart(){
         productToCart.color = event.target.value;
     })
 
-    productToCart.id = productToCart._id;
+    productToCart.id = productById._id;
 
     addToCartButton.addEventListener("click", function(event){
         if(productToCart.color == ""){
@@ -79,8 +80,31 @@ function addToCart(){
 }
 
  function setToLocalStorage() {
-     
- }
+     let storageString = localStorage.getItem('cart');
+     let storage = JSON.parse(storageString);
+console.log(productToCart)
+     // si pas vide
+     if(storage){
+        //recherche element avec meme id et couleur
+        let getProduct = storage.find((item) => item.id == productToCart.id && item.color == productToCart.color);
+        //Si trouve quelque chose ajouter quantite voulue
+        if (getProduct){
+            getProduct.quantity += productToCart.quantity;
+            localStorage.setItem("cart", JSON.stringify(storage));
+            alert ('Quantité mise a jour');
+            // sinon ajouter new element a local storage array
+        }else{
+            storage.push(productToCart);
+            localStorage.setItem('cart', JSON.stringify(storage));
+            alert ('Le panier a été mis a jour')
+        }
+     }else{
+        const cart = []
+        cart.push(productToCart);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        alert ('Panier mis a jour');
+     }
+}
 
 
 async function main() {
