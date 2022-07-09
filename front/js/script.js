@@ -1,8 +1,7 @@
-// initialisation variable
+// initialisation variable contenant liste de produit dans un array
 let products = []
 
-//function pour call api
-
+//Fonction qui récupère les données des produits dans l'api mise a disposition
 async function getProducts() {
     await fetch("http://localhost:3000/api/products")
         .then((res) => res.json())
@@ -10,7 +9,9 @@ async function getProducts() {
         .catch(err => console.log('erreur lors du chargement des produits', err));
 }
 
-// afficher les produits
+/*fonction qui appelle la fonction de récupération de données et qui
+utilise une boucle for pour créer chaque élement html en itérant l'array de produits
+ et qui affecte les données correspondantes à chaque élément*/
 async function displayProducts() {
     await getProducts();
     let itemsId = document.getElementById('items');
@@ -41,8 +42,10 @@ async function displayProducts() {
     }
 }
 
+// fonction main qui appelle la fonction de création d'éléments HTML
 async function main() {
     await displayProducts();
 }
 
+// appel de la fonction main
 main();

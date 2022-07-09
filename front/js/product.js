@@ -1,3 +1,4 @@
+//déclaration des variables globales
 let productById = [];
 let id = '';
 let href = window.location.href;
@@ -15,7 +16,9 @@ if(searchId.has("id")) {
     id = searchId.get("id");
   }
 
-async function getProductById() {
+
+// fonction qui récupère le produit sélectionné en fonction de son id grace à un fetch
+  async function getProductById() {
     console.log(id)
     await fetch(`http://localhost:3000/api/products/${id}`)
         .then((res) => res.json())
@@ -23,8 +26,8 @@ async function getProductById() {
         .catch(err => console.log('erreur lors du chargement des produits', err)); 
 }
 
-//afficher l'image
-async function displayProductById(){
+//fonction d'affichage des informations du produit
+    async function displayProductById(){
     await getProductById();
     const itemImg = document.querySelector("div.item__img");
     const productImg = document.createElement("img");
@@ -48,10 +51,9 @@ async function displayProductById(){
         newColor.innerText = productById.colors[i];
         productColors.appendChild(newColor);
     }
-
-    //console.log(products)
 }
 
+//fonction qui écoute les événements sur les inputs couleur et quantité et sur le bouton d'ajout au panier
 function addToCart(){
     const addToCartButton = document.getElementById("addToCart");
     const quantityInput = document.getElementById("quantity");
@@ -67,6 +69,7 @@ function addToCart(){
 
     productToCart.id = productById._id;
 
+//une fois le bouton cliqué on vérifie la couleur et la quantité
     addToCartButton.addEventListener("click", function(event){
         if(productToCart.color == ""){
             alert('Veuillez choisir une couleur')
@@ -79,25 +82,28 @@ function addToCart(){
 
 }
 
+//fonction qui insère l'élémént choisi dans un array dans le local storage
  function setToLocalStorage() {
      let storageString = localStorage.getItem('cart');
      let storage = JSON.parse(storageString);
 console.log(productToCart)
-     // si pas vide
+
+     //si le stockage n'est pas vide
      if(storage){
-        //recherche element avec meme id et couleur
+        //on recherche un élément qui a le même id et la même couleur
         let getProduct = storage.find((item) => item.id == productToCart.id && item.color == productToCart.color);
-        //Si trouve quelque chose ajouter quantite voulue
+        //si on en trouve un on ajoute la nouvelle quantité désirée
         if (getProduct){
             getProduct.quantity += productToCart.quantity;
             localStorage.setItem("cart", JSON.stringify(storage));
             alert ('Quantité mise a jour');
-            // sinon ajouter new element a local storage array
+            //sinon on ajoute un nouvel élément à l'array du localstorage
         }else{
             storage.push(productToCart);
             localStorage.setItem('cart', JSON.stringify(storage));
             alert ('Le panier a été mis a jour')
         }
+        //si le local storage est vide on crée le premier élément
      }else{
         const cart = []
         cart.push(productToCart);
@@ -106,7 +112,7 @@ console.log(productToCart)
      }
 }
 
-
+//fonction main qui appelle les fonction d'affichage et d'ajout des produits
 async function main() {
     await displayProductById();
     addToCart();
