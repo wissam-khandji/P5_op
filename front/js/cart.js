@@ -165,7 +165,7 @@ function deleteItem() {
         let colorId = cartForDelete[i].color;
         deleteButton.addEventListener("click", function(){
             let filteredcart = cartForDelete.filter(function(itemToRemove) {
-                return itemToRemove.id /*!= dataId  || itemToRemove.color != colorId;*/;
+                return itemToRemove.id != dataId  || itemToRemove.color != colorId;
             });
             cartForDelete = filteredcart;
             cart = cartForDelete;
