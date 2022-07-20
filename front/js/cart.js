@@ -109,7 +109,7 @@ function displayingProducts() {
     productQuantity.innerText = "Qté :";
     divContentSettingsQuantity.appendChild(productQuantity);
 
-    //affichage de la  quantité désirée dans un input pour la modification
+    //affichage de la  quantité désirée dans un input pour la modification (sécurité)
     let productQuantityInput = document.createElement("input");
     productQuantityInput.setAttribute("type", "number");
     productQuantityInput.setAttribute("class", "itemQuantity");
@@ -159,20 +159,19 @@ function changeQuantity() {
 function deleteItem() {
     let  articleToDelete = document.querySelectorAll(".cart__item");
     let deleteButtons = document.querySelectorAll(".deleteItem");
-    let a = 0;
     for (let i = 0; i < articleToDelete.length; i++) {
         const deleteButton = deleteButtons[i];
         let dataId = cartForDelete[i].id;
         let colorId = cartForDelete[i].color;
         deleteButton.addEventListener("click", function(){
             let filteredcart = cartForDelete.filter(function(itemToRemove) {
-                return itemToRemove.id != dataId  || itemToRemove.color != colorId;
+                return itemToRemove.id /*!= dataId  || itemToRemove.color != colorId;*/;
             });
             cartForDelete = filteredcart;
             cart = cartForDelete;
             cartForQuantity = cartForDelete;
             localStorage.setItem("cart", JSON.stringify(cartForDelete));
-            a = document.querySelector(`[data-id = "${dataId}"]` && `[data-color = "${colorId}"]`);
+            let a = document.querySelector(`[data-id = "${dataId}"]` && `[data-color = "${colorId}"]`);
             a.remove();
             calc();
         });
@@ -193,7 +192,7 @@ function testFormInput() {
     let emailError = document.getElementById("emailErrorMsg");
     let firstNameRegex = /[A-Za-z\-\è\é\ê\à\î\â].{2,}/g;
     let lastNameRegex = /[A-Za-z\-].{2,}/g;
-    let addressRegex = /^[0-9]{1,}\s[A-Za-z]/g;
+    let addressRegex = /^[0-9]\s[A-Za-z]/g;
     let cityRegex = /[A-Za-z\-].{2,}/g;
     let emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/g;
 
